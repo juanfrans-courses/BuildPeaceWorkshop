@@ -41,19 +41,52 @@ print('Done importing libraries...')
 * Luego debemos importar la base de datos de víctimas y convertirla a un `dataframe` de Pandas:
   * Uno de los problemas que vamos a tener es que el archivo de Excel que bajamos del Registro Único de Víctimas tiene dos hojas y la segunda, no tiene títulos en las columnas.
   * Por eso debemos importar las dos hojas por separado, anotando que la segunda no tiene títulos, para luego asignarle títulos a la segunda y unirl las dos hojas en un solo dataframe.
+  * Importar la primera hoja de Excel:
+  ```python
+  datosVictimas = pd.read_excel('datos/Reporte Ocurrencia Hecho Victimizante.xlsx', sheet_name='Exportar Hoja de Trabajo')
+  datosVictimas.head()
+  ```
+  * `head()` imprime las primeras 10 lineas del `dataframe`. O también se puede usar `datosVictimas.shape` para saber cuantas filas y cuantas columnas tiene el `dataframe`.
+  * Importar la segunda hoja de Excel (anotando que no tiene nombres de columnas):
+  ```python
+  datosVictimas2 = pd.read_excel('datos/Reporte Ocurrencia Hecho Victimizante.xlsx', sheetname='Sheet1', header=None)
+  datosVictimas2.head()
+  ```
+  * Sacar los nombres de las columnas de la primera hoja y asignárselos a la segunda hoja:
+  ```python
+  nombresColumnas = list(datosVictimas)
+  datosVictimas2.columns = nombresColumnas
+  datosVictimas2.tail()
+  ```
+  * Adicionarle la segunda hoja a la primera:
+  ```python
+  datosVictimas.append(datosVictimas2)
+  ```
+* Una vez tenemos el `dataframe` con todos los datos podemos empezar a explorarlos y a sacar estadísticas:
+  * Por ejemplo, cuántos reportes hay de cada crimen: `datosVictimas.groupby('HECHO VICTIMIZANTE').count()`
+  * O cuántas víctimas hubo en cada año y ordenarlo de mayor a menor: `datosVictimas.groupby('ANIO OCURRENCIA').count().sort_values('TIPO DE VICTIMA', ascending=False)`
+  * O cuántos municipios fueron afectados: `len(datosVictimas['DANE OCURRENCIA'].unique())`
+  * También podemos averiguar cuántos municipios estuvieron afectados por desplazamiento en cada año:
+  ```python
+  for x in range(1985,2018):
+    thisData = datosVictimas[(datosVictimas['ANIO OCURRENCIA'] == x) & (datosVictimas['HECHO VICTIMIZANTE'] == 'Desplazamiento')]
+    print(str(x) + ' - ' + str(len(thisData['DANE OCURRENCIA'].unique())))
+  ```
+
+### Filtrando y Seleccionando Datos
+Ahora vamos a crear un `dataframe` nuevo, sólo con los datos que vamos a mapear. En este caso vamos a seleccionar sólo datos de desplazamiento forzado del año 2005 y le vamos a agregar los datos de población de DANE.
+* Primero creemos un `dataframe` nuevo con los datos que queremos:
 ```python
-datosVictimas = pd.read_excel('datos/Reporte Ocurrencia Hecho Victimizante.xlsx', sheet_name='Exportar Hoja de Trabajo')
-datosVictimas.head()
+desplazamiento2005 = datosVictimas[(datosVictimas['ANIO OCURRENCIA'] == 2002) & (datosVictimas['HECHO VICTIMIZANTE'] == 'Desplazamiento')]
+desplazamiento2005
 ```
+* Ahora, seleccionemos sólo las columnas que queremos (`DANE OCURRENCIA` y `TOTAL`) y agrupemoslos por municipio, sumando las víctimas:
 ```python
-datosVictimas2 = pd.read_excel('datos/Reporte Ocurrencia Hecho Victimizante.xlsx', sheetname='Sheet1', header=None)
-datosVictimas2.head()
+desplazamiento2005 = desplazamiento2005[['DANE OCURRENCIA', 'TOTAL']]
+desplazamientoMunicipio2005 = desplazamiento2005.groupby(['DANE OCURRENCIA']).sum()
+desplazamientoMunicipio2005.sort_values('TOTAL', ascending=False)
 ```
-```python
-nombresColumnas = list(datosVictimas)
-datosVictimas2.columns = nombresColumnas
-datosVictimas2.tail()
-```
-```python
-datosVictimas.append(datosVictimas2)
-```
+
+
+
+desplazamientoMunicipio2005.unstack(level=0)
