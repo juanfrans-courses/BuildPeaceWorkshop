@@ -29,3 +29,31 @@ En esta primera parte del tallver vamos a importar los datos no geográficos al 
   * O en Windows y en Mac abriendo la aplicación de Anaconda e iniciando ahí un Jupyter Notebook.
   * En cualquiera de los dos casos, una ventana nueva de su navegador (Chrome, Safari o Firefox) se abrirá con el menú principal de Jupyter Notebooks.
 * En el menú principal de Jupyter Notebooks, inicien un nuevo Python 3 Notebook (`New`, `Python 3`).
+* Lo primero que hay que hacer es importar las bibliotecas adecuadas para poder leer y procesar los datos:
+```python
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+plt.style.use('ggplot')
+%matplotlib inline
+print('Done importing libraries...')
+```
+* Luego debemos importar la base de datos de víctimas y convertirla a un `dataframe` de Pandas:
+  * Uno de los problemas que vamos a tener es que el archivo de Excel que bajamos del Registro Único de Víctimas tiene dos hojas y la segunda, no tiene títulos en las columnas.
+  * Por eso debemos importar las dos hojas por separado, anotando que la segunda no tiene títulos, para luego asignarle títulos a la segunda y unirl las dos hojas en un solo dataframe.
+```python
+datosVictimas = pd.read_excel('datos/Reporte Ocurrencia Hecho Victimizante.xlsx', sheet_name='Exportar Hoja de Trabajo')
+datosVictimas.head()
+```
+```python
+datosVictimas2 = pd.read_excel('datos/Reporte Ocurrencia Hecho Victimizante.xlsx', sheetname='Sheet1', header=None)
+datosVictimas2.head()
+```
+```python
+nombresColumnas = list(datosVictimas)
+datosVictimas2.columns = nombresColumnas
+datosVictimas2.tail()
+```
+```python
+datosVictimas.append(datosVictimas2)
+```
