@@ -21,6 +21,7 @@ En este taller utilizaremos Python y QGIS. Python es un lenguaje de programació
 En este taller vamos a utilizar los siguientes datos:
 * [Número de Personas por Lugar de Ocurrencia - Hecho Victimizante, Genero, Ciclo Vital, Discapacidad, Pertenencia Etnica y Año Ocurrencia](https://rni.unidadvictimas.gov.co/RUV): Datos del Registro Único de Víctimas sobre las víctimas del conflicto colombiano.
 * [Estimación y proyección de población nacional, departamental y municipal total por área 1985-2020](http://www.dane.gov.co/index.php/estadisticas-por-tema/demografia-y-poblacion/proyecciones-de-poblacion): Datos del Departamento Nacional de Estadísticas sobre la población de cada municipio en 2005 y las proyecciones hasta el 2020.
+* [Marco Geoestadístico Nacional](https://geoportal.dane.gov.co/v2/?page=elementoDescargaMGN): Datos geográficos de cada departamento. De estos, vamos a utilizar `MGN_ADM_MPIO_GRAFICO.shp` y `MGN_RUR_CENTRO_POBLADO.shp` que se encuentran en la carpeta `ADMINISTRATIVO`.
 
 ### Importar y Explorar los Datos
 En esta primera parte del tallver vamos a importar los datos no geográficos al Jupyter Notebook para hacer una exploración inicial. Luego los filtraremos y los exportaremos listos para mapear.
@@ -116,3 +117,10 @@ datosDesplazamiento = datosDesplazamiento[['DANE OCURRENCIA', 'TOTAL', 'DPNOM', 
 datosDesplazamiento
 ```
 * Y por último, exportamos el `dataframe` listo para mapear: `datosDesplazamiento.to_csv('datosDesplazamiento.csv')`
+
+### Preparando los Datos Gegráficos
+Después de bajar los datos geográficos de cada departamento, debemos combinarlos todos para formar sólo un archivo con todos los municipios o centros urbanos.
+* Para esto hay que, primero, abrir QGIS y agregar todos los datos `MGN_ADM_MPIO_GRAFICO.shp` y `MGN_RUR_CENTRO_POBLADO.shp` al mismo mapa.
+* Una vez tenemos los datos ahí, utilizamos la herramienta `Vector`, `Data Management Tools`, `Merge vector layers`.
+![Merge Layers](https://github.com/juanfrans-courses/BuildPeaceWorkshop/blob/master/imgs/01_MergeLayers.png)
+* En el menú que sige hay que seleccionar todos los archivos de municipios y exportarlos. Luego hay que hacer lo mismo con todos los archivos de centros poblados.
