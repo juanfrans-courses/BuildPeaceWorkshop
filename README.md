@@ -122,8 +122,38 @@ datosDesplazamiento
 Después de bajar los datos geográficos de cada departamento, debemos combinarlos todos para formar sólo un archivo con todos los municipios o centros urbanos.
 * Para esto hay que, primero, abrir QGIS y agregar todos los datos `MGN_ADM_MPIO_GRAFICO.shp` y `MGN_RUR_CENTRO_POBLADO.shp` al mismo mapa.
 * Una vez tenemos los datos ahí, utilizamos la herramienta `Vector`, `Data Management Tools`, `Merge vector layers`.
+
 ![Merge Layers](https://github.com/juanfrans-courses/BuildPeaceWorkshop/blob/master/imgs/01_MergeVectorLayers.png)
+
 * En el menú que sige hay que seleccionar todos los archivos de municipios y exportarlos. Luego hay que hacer lo mismo con todos los archivos de centros poblados.
 * Tan pronto el programa termine la operación, se va a agregar actomáticamente una capa con el resultado. Sin embargo, esa capa es sólo temporal y deben agregar el archivo que guardaron.
 * El resultado final debe ser una capa con todos los municipios y otra con todos los centros poblados del país.
+
 ![Colombia Layers](https://github.com/juanfrans-courses/BuildPeaceWorkshop/blob/master/imgs/02_ColombiaLayers.png)
+
+* Una vez tengamos listos estos archivos ya podemos importar nuestos datos y agregárselos.
+
+### Importar y Unir Datos
+* Lo primero que debemos hacer es importar los datos que exportamos del Jupyter Notebook. Para esto, debemos usar el boton `Add Delimited Text Layer`.
+* Aquí debemos asegurarnos de seleccionar `CSV (Comma separated values)` y `No geometry (attribute only table)`. Y de que en el preview, los datos se vean correctos.
+
+![Import Data](https://github.com/juanfrans-courses/BuildPeaceWorkshop/blob/master/imgs/03_ImportData.png)
+
+* Finálmente, para unir los datos debemos asegurarnos que las columnas que vamos a unir tengan el mismo tipo de datos. Si le damos click-derecho a las capas y luego seleccionamos `Propiedades` y `Fields`, nos damos cuenta que la columna `DANE OCURRENCIA` de los datos que importamos tiene datos de tipo `int` mientras que en la capa de municipios, la columna `MPIO_CCNCT` tiene datos de tipo `QString`. Esto hará que la unión de las dos capas falle.
+* Para solucionar esto, es preciso crear una nueva columna en la capa de municipios de tipo `int` y copiar los datos de la columna `MPIO_CCNCT`:
+  * Primero, abran la tabla de atributos de esa capa y abran la ventana `Open field calculator`.
+  * Luego, denle un nombre a la nueva columna (`DaneInt`) y asegúrense de que sea de tipo `Whole number (integer)`.
+  * Luego, de `Fields and Values` seleccionen con doble-click la columna `MPIO_CCNCT`.
+  * Finálmente, denle clik a `OK`.
+
+![New Field](https://github.com/juanfrans-courses/BuildPeaceWorkshop/blob/master/imgs/04_NewField.png)
+
+* Una vez tengan eso listo, asegúrense de darle click a `Save Layer Edits` y `Toggle Editing` para parar de editar.
+* Por último, ya que tenemos las dos columnas con el mismo tipo de datos, podemos unir la tabla a la capa de municipios:
+  * Para hacer esto, denle click derecho a la capa de municipios y escojan `Properties`.
+  * Ahí, vayan a `Joins` y con el signo + creen una nueva unión.
+  * En el menú que sale, escogan el archivo de datos que importamos, y la columna `DANE OCURRENCIA` como el `Join field`. Y la columna `DaneInt` como la `Target field`. Y por último, una abreviación más corta para identificar las columnas del archivo de datos.
+
+![Joins](https://github.com/juanfrans-courses/BuildPeaceWorkshop/blob/master/imgs/05_Joins.png)
+
+* Por último, abran la tabla de atributos de la capa de municipios para asegurarse que las nuevas columnas estén ahí.
