@@ -157,3 +157,6 @@ Después de bajar los datos geográficos de cada departamento, debemos combinarl
 ![Joins](https://github.com/juanfrans-courses/BuildPeaceWorkshop/blob/master/imgs/05_Joins.png)
 
 * Por último, abran la tabla de atributos de la capa de municipios para asegurarse que las nuevas columnas estén ahí.
+* Con estos datos ahí ya podemos hacer mapas mostrando el número de desplazados en cada municipio o el número de desplazados por persona basado en la población de 2005.
+
+![Map](https://github.com/juanfrans-courses/BuildPeaceWorkshop/blob/master/imgs/06_Map.png)
