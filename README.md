@@ -86,7 +86,33 @@ desplazamiento2005 = desplazamiento2005[['DANE OCURRENCIA', 'TOTAL']]
 desplazamientoMunicipio2005 = desplazamiento2005.groupby(['DANE OCURRENCIA']).sum()
 desplazamientoMunicipio2005.sort_values('TOTAL', ascending=False)
 ```
-
-
-
-desplazamientoMunicipio2005.unstack(level=0)
+* Para importar los datos de población de los municipios utilizamos la misma fórmula que usamos para importar los datos de las víctimas, sólo que tenemos que ignorar algunas filas al comienzo y algunas filas al final:
+```python
+datosMunicipios = pd.read_excel('datos/Municipal_area_1985-2020.xls', sheetname='Mpios', skiprows=9, skip_footer=14)
+datosMunicipios
+```
+* Ahora, miremos qué columnas tiene este archivo y seleccionemos sólo las que nos interesan:
+```python
+list(datosMunicipios)
+```
+```python
+datosMunicipios = datosMunicipios[['DPNOM', 'DPMP', 'MPIO', 2005]]
+datosMunicipios
+```
+* Finalmente, vamos a unir los dos `dataframes`, basados en la columna `DANE OCURRENCIA` del `dataframe` de las víctimas y `DPMP` del `dataframe` de los municipios. Sin embargo, primero debemos asegurarnos de que ambos `dataframes` tengan las columnas organizadas y sean del mismo tipo de datos.
+* Primero adicionemosle un índice al `dataframe` de las víctimas: `desplazamientoMunicipio2005 = desplazamientoMunicipio2005.reset_index()`
+* Ahora revisemos el tipo de datos de ambos `dataframes`: `desplazamientoMunicipio2005.dtypes` y `datosMunicipios.dtypes`.
+* Aquí nos damos cuenta que la columna `DANE OCURRENCIA` es de tipo `object`. Esto es porque hay unas filas en las que en vez del número del municipio dice `Sin Informacion`. Para poder cambiar el tipo de datos a `int64` y que se pueda unir con los datos del municipio debemos eliminar esas filas: `desplazamientoMunicipio2005 = desplazamientoMunicipio2005[desplazamientoMunicipio2005['DANE OCURRENCIA'] != 'Sin Informacion']`
+* Ahora podemos cambiar el tipo de datos de esa columna: `desplazamientoMunicipio2005['DANE OCURRENCIA'] = desplazamientoMunicipio2005['DANE OCURRENCIA'].astype(int)`
+* Y finalmente unir ambos `dataframes`:
+```python
+datosDesplazamiento = pd.merge(desplazamientoMunicipio2005, datosMunicipios, left_on='DANE OCURRENCIA', right_on='DPMP')
+datosDesplazamiento
+```
+* Podemos ordenar los datos por el municipio con mayor desplazamiento: `datosDesplazamiento.sort_values('TOTAL', ascending=False)`
+* Y debemos seleccionar sólo las columnas que necesitemos:
+```python
+datosDesplazamiento = datosDesplazamiento[['DANE OCURRENCIA', 'TOTAL', 'DPNOM', 'MPIO', 2005]]
+datosDesplazamiento
+```
+* Y por último, exportamos el `dataframe` listo para mapear: `datosDesplazamiento.to_csv('datosDesplazamiento.csv')`
