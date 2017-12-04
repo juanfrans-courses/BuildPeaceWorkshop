@@ -122,5 +122,8 @@ datosDesplazamiento
 Después de bajar los datos geográficos de cada departamento, debemos combinarlos todos para formar sólo un archivo con todos los municipios o centros urbanos.
 * Para esto hay que, primero, abrir QGIS y agregar todos los datos `MGN_ADM_MPIO_GRAFICO.shp` y `MGN_RUR_CENTRO_POBLADO.shp` al mismo mapa.
 * Una vez tenemos los datos ahí, utilizamos la herramienta `Vector`, `Data Management Tools`, `Merge vector layers`.
-![Merge Layers](https://github.com/juanfrans-courses/BuildPeaceWorkshop/blob/master/imgs/01_MergeLayers.png)
+![Merge Layers](https://github.com/juanfrans-courses/BuildPeaceWorkshop/blob/master/imgs/01_MergeVectorLayers.png)
 * En el menú que sige hay que seleccionar todos los archivos de municipios y exportarlos. Luego hay que hacer lo mismo con todos los archivos de centros poblados.
+* Tan pronto el programa termine la operación, se va a agregar actomáticamente una capa con el resultado. Sin embargo, esa capa es sólo temporal y deben agregar el archivo que guardaron.
+* El resultado final debe ser una capa con todos los municipios y otra con todos los centros poblados del país.
+![Colombia Layers](https://github.com/juanfrans-courses/BuildPeaceWorkshop/blob/master/imgs/02_ColombiaLayers.png)
